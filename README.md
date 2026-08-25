@@ -26,13 +26,13 @@ Evaluate potential live data sources across the following dimensions:
 See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the full comparison.
 
 ## Repository Structure
-├── README.md          
-├── docs/              
-│   ├── 01-amazon-reviews.md
-│   ├── 02-reddit.md
-│   ├── 03-g2-capterra.md
-│   └── 04-news-apis.md
-├── comparison/        
-│   └── evaluation-matrix.md
-└── tests/            
-    └── api-test-results.md
+├── README.md # This file — overview & recommendation
+├── docs/
+│ ├── 01-amazon-reviews.md # Amazon reviews deep-dive
+│ ├── 02-reddit.md # Reddit API deep-dive
+│ ├── 03-g2-capterra.md # G2/Capterra deep-dive
+│ └── 04-news-apis.md # News APIs (GDELT etc.) deep-dive
+├── comparison/
+│ └── evaluation-matrix.md # Side-by-side comparison table
+└── tests/
+└── api-test-results.md # Actual API test code & results
