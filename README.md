@@ -27,12 +27,12 @@ See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the
 
 ## Repository Structure
 ├── README.md          
-├── docs/              ← 放4个数据源的详细调研
+├── docs/              
 │   ├── 01-amazon-reviews.md
 │   ├── 02-reddit.md
 │   ├── 03-g2-capterra.md
 │   └── 04-news-apis.md
-├── comparison/        ← =放对比表格
+├── comparison/        
 │   └── evaluation-matrix.md
-└── tests/             ← =放API测试记录
+└── tests/            
     └── api-test-results.md
