@@ -42,10 +42,10 @@ Features: Built-in sentiment analysis, video/link extraction
 Limitation: Only 30 days of historical data on free tier
 
 ## Evaluation (GDELT-focused)
-Dimension	     Rating	        Notes
+Dimension	     Rating	          Notes
 Accessibility	⭐⭐⭐⭐⭐	  GDELT is completely free, no API key, no rate limits
-Scalability	⭐⭐⭐⭐⭐	    Unlimited access, designed for large-scale analysis
-Update Frequency	⭐⭐⭐⭐⭐15-minute updates — near real-time for news
+Scalability	    ⭐⭐⭐⭐⭐	  Unlimited access, designed for large-scale analysis
+Update Frequency⭐⭐⭐⭐⭐     15-minute updates — near real-time for news
 Data Quality	⭐⭐⭐	         News text is high quality, but not direct customer feedback
 Sentiment Relevance	⭐⭐	     Media perspective, not customer voice; better for brand reputation than product sentiment
 Long-term Maintainability	⭐⭐⭐⭐⭐	Backed by Google, very stable, exists since 2013
