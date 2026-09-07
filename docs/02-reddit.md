@@ -20,6 +20,7 @@ Reddit is a massive network of community forums (subreddits) where users discuss
 - **Commercial use**: Requires enterprise agreement (contact Reddit)
 
 ### Python Quick Start (PRAW)
+```python
 import praw
 
 reddit = praw.Reddit(
@@ -35,30 +36,33 @@ for post in subreddit.new(limit=10):
     print(f"Score: {post.score}")
     print(f"Content: {post.selftext[:200]}")
     print("---")
+```
 
-### Evaluation
-Dimension    	     Rating	        Notes
-Accessibility	    ⭐⭐⭐⭐	    Free for non-commercial, well-documented, mature Python SDK
-Scalability	      ⭐⭐⭐	        100 req/min cap; enterprise tier needed for large-scale
-Update Frequency	⭐⭐⭐⭐⭐	  Near real-time — new posts visible within seconds
-Data Quality	    ⭐⭐⭐⭐	    Rich discussion content, but has noise, trolls, and spam
-Sentiment Relevance	⭐⭐⭐⭐	  Authentic user discussions; requires filtering for relevant posts
-Long-term Maintainability	⭐⭐⭐⭐Official API is stable; policy tightened in 2023 but still reliable
+## Evaluation
 
-### Pros
-Free for non-commercial use (great for PoC)
-Real-time data with massive volume
-Mature Python ecosystem (PRAW library)
-Authentic, unscripted user opinions
-Wide coverage across all industries/topics
+| Dimension | Rating | Notes |
+|-----------|--------|-------|
+| **Accessibility** | ⭐⭐⭐⭐ | Free for non-commercial, well-documented, mature Python SDK |
+| **Scalability** | ⭐⭐⭐ | 100 req/min cap; enterprise tier needed for large-scale |
+| **Update Frequency** | ⭐⭐⭐⭐⭐ | Near real-time — new posts visible within seconds |
+| **Data Quality** | ⭐⭐⭐⭐ | Rich discussion content, but has noise, trolls, and spam |
+| **Sentiment Relevance** | ⭐⭐⭐⭐ | Authentic user discussions; requires filtering for relevant posts |
+| **Long-term Maintainability** | ⭐⭐⭐⭐ | Official API is stable; policy tightened in 2023 but still reliable |
 
-### Cons
-Free tier is non-commercial only (need enterprise for production)
-100 req/min rate limit
-Data is noisy — requires filtering and relevance scoring
-Not all posts are product/customer-sentiment related
+## Pros
+- Free for non-commercial use (great for PoC)
+- Real-time data with massive volume
+- Mature Python ecosystem (PRAW library)
+- Authentic, unscripted user opinions
+- Wide coverage across all industries/topics
 
-### References
-Reddit API Documentation
-PRAW Python Library
-Reddit API Rate Limits
+## Cons
+- Free tier is non-commercial only (need enterprise for production)
+- 100 req/min rate limit
+- Data is noisy — requires filtering and relevance scoring
+- Not all posts are product/customer-sentiment related
+
+## References
+- [Reddit API Documentation](https://www.reddit.com/dev/api/)
+- [PRAW Python Library](https://praw.readthedocs.io/)
+- [Reddit API Rate Limits](https://support.reddithelp.com/hc/en-us/articles/16160319875092)
