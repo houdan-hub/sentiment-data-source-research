@@ -7,25 +7,31 @@ News APIs provide access to global news articles, which can be analyzed for sent
 
 ### Option 1: GDELT 2.0 (Recommended — Free & Unlimited)
 - **Cost**: Completely free, commercial use allowed
-- **Rate limits**: None
+- **Rate limits**: ⚠️ **Strict: 1 request per 5 seconds** (confirmed via testing 2026-09-29)
 - **Update frequency**: Every 15 minutes
 - **Coverage**: Global news in 100+ languages
 - **Key features**: Event-level data, sentiment/tone scoring built-in, entity extraction
 - **Access**: No API key needed, REST API or BigQuery
+- **Response time**: ~25 seconds per request (due to rate limiting + server processing)
 
 ```python
-# GDELT API example — fetch events mentioning a keyword
+# GDELT API example — fetch sentiment tone chart for a keyword
 import requests
+import time
+
+# IMPORTANT: Wait at least 5 seconds between requests
+time.sleep(6)
 
 url = "https://api.gdeltproject.org/api/v2/doc/doc"
 params = {
     "query": "Tesla",
-    "mode": "ArtList",
-    "maxrecords": 10,
+    "mode": "ToneChart",  # Returns pre-computed sentiment bins
+    "maxrecords": 5,
     "format": "json"
 }
-response = requests.get(url, params=params)
+response = requests.get(url, params=params, timeout=30)
 data = response.json()
+# data["tonechart"] = array of {bin (sentiment score), count, toparts}
 ```
 
 ### Option 2: NewsData.io
@@ -44,25 +50,48 @@ data = response.json()
 - **Features**: Built-in sentiment analysis, video/link extraction
 - **Limitation**: Only 30 days of historical data on free tier
 
+## Testing Findings (2026-09-29)
+
+### GDELT ToneChart Mode — ✅ Success
+- **Status**: 200 OK
+- **Response time**: 24.86 seconds
+- **Returns**: `tonechart` array with sentiment bins
+- **Each bin contains**: `bin` (tone score, negative = negative sentiment), `count` (article count), `toparts` (top articles with url/title)
+- **Key benefit**: Pre-computed sentiment eliminates need for separate NLP model
+
+### GDELT ArtList Mode — ⚠️ Rate Limited
+- **Status**: 429 Too Many Requests
+- **Error**: "Please limit requests to one every 5 seconds"
+- **Cause**: IP temporarily throttled due to consecutive requests in testing
+- **Lesson**: Must implement 5+ second delay between all GDELT API calls
+
+### Practical Implications
+- GDELT is **not suitable for real-time** applications due to 5s rate limit and ~25s response
+- Best for **batch processing** and **daily/hourly aggregation**
+- For higher volume, use GDELT BigQuery dataset or ngrams dataset
+- ToneChart mode is excellent for **macro brand sentiment tracking**
+
 ## Evaluation (GDELT-focused)
 
 | Dimension | Rating | Notes |
 |-----------|--------|-------|
-| **Accessibility** | ⭐⭐⭐⭐⭐ | GDELT is completely free, no API key, no rate limits |
-| **Scalability** | ⭐⭐⭐⭐⭐ | Unlimited access, designed for large-scale analysis |
+| **Accessibility** | ⭐⭐⭐⭐⭐ | GDELT is completely free, no API key, but strict 5s rate limit |
+| **Scalability** | ⭐⭐⭐ | REST API limited to 1 req/5s; use BigQuery for large scale |
 | **Update Frequency** | ⭐⭐⭐⭐⭐ | 15-minute updates — near real-time for news |
 | **Data Quality** | ⭐⭐⭐ | News text is high quality, but not direct customer feedback |
-| **Sentiment Relevance** | ⭐⭐ | Media perspective, not customer voice; better for brand reputation than product sentiment |
+| **Sentiment Relevance** | ⭐⭐ | Media perspective, not customer voice; better for brand reputation |
 | **Long-term Maintainability** | ⭐⭐⭐⭐⭐ | Backed by Google, very stable, exists since 2013 |
 
 ## Pros
-- GDELT is 100% free with no limits (best free data source in this list)
-- Near real-time updates (15 min)
-- Built-in sentiment/tone scoring (GDELT)
-- Global coverage across all industries
-- Extremely stable and well-maintained
+- GDELT is 100% free with no API key required
+- Built-in sentiment/tone scoring via ToneChart mode
+- Global coverage across all industries and languages
+- Extremely stable and well-maintained (Google-backed)
+- 15-minute update frequency
 
 ## Cons
+- **Strict rate limit**: 1 request per 5 seconds (not "unlimited" as commonly claimed)
+- **Slow response**: ~25s per request, not suitable for real-time
 - News is media perspective, NOT direct customer sentiment
 - Requires filtering to find relevant articles
 - Sentiment is about events/brands, not about specific product experiences
@@ -71,5 +100,6 @@ data = response.json()
 ## References
 - [GDELT Project](https://www.gdeltproject.org/)
 - [GDELT API Documentation](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/)
+- [GDELT BigQuery Dataset](https://cloud.google.com/blog/products/gcp/google-bigquery-public-datasets-now-include-gdelt)
 - [NewsData.io](https://newsdata.io/)
 - [NewsAPI.org](https://newsapi.org/)
