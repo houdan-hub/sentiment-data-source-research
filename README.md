@@ -27,6 +27,11 @@ Evaluate potential live data sources across the following dimensions:
 
 See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the full comparison.
 
+## Key Testing Findings (2026-09-29)
+- **Reddit**: Unauthenticated public API now returns 403. OAuth registration is mandatory (reCAPTCHA issues encountered during signup).
+- **GDELT**: ToneChart mode works and returns built-in sentiment bins. Strict rate limit of 1 request/5 seconds; ~25s response time. No API key needed.
+- Full test details: [`tests/api-test-results.md`](tests/api-test-results.md)
+
 ## Repository Structure
 ```
 .
@@ -46,6 +51,6 @@ See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the
 - [x] Repository setup & research framework
 - [x] Documentation for all 4 candidate data sources
 - [x] Evaluation matrix & recommendation
-- [ ] Reddit API testing
-- [ ] GDELT API testing
+- [x] GDELT API testing (ToneChart successful, rate limit documented)
+- [x] Reddit API testing (public endpoint 403 confirmed; OAuth pending)
 - [ ] Final review & email to John
