@@ -22,14 +22,16 @@ Evaluate potential live data sources across the following dimensions:
 3. **GDELT 2.0 (Global News)** — Macro-level news sentiment and brand reputation signals
 4. **G2 / Capterra (B2B Software Reviews)** — High-quality structured B2B software reviews
 
-## Recommendation
-**Start with Reddit for the initial PoC, with Amazon reviews as a Phase 2 addition.**
+## Recommendation (Updated 2026-09-29)
+**Start immediately with GDELT 2.0 (no signup needed) + Amazon reviews via Canopy API (free trial). Submit Reddit developer application in parallel; add Reddit as soon as approved.**
+
+Reddit remains the best long-term source for authentic customer sentiment, but as of 2026 Reddit requires manual API approval (days to weeks, no SLA). We should not block the PoC on this.
 
 See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the full comparison.
 
 ## Key Testing Findings (2026-09-29)
-- **Reddit**: Unauthenticated public API now returns 403. OAuth registration is mandatory (reCAPTCHA issues encountered during signup).
-- **GDELT**: ToneChart mode works and returns built-in sentiment bins. Strict rate limit of 1 request/5 seconds; ~25s response time. No API key needed.
+- **Reddit**: Self-service app creation is disabled under the Responsible Builder Policy. Public endpoints return 403. Manual API request ticket submitted; awaiting review.
+- **GDELT**: ToneChart mode works immediately, returns built-in sentiment bins. Strict rate limit: 1 request/5 seconds, ~25s response. No API key needed.
 - Full test details: [`tests/api-test-results.md`](tests/api-test-results.md)
 
 ## Repository Structure
@@ -52,5 +54,6 @@ See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the
 - [x] Documentation for all 4 candidate data sources
 - [x] Evaluation matrix & recommendation
 - [x] GDELT API testing (ToneChart successful, rate limit documented)
-- [x] Reddit API testing (public endpoint 403 confirmed; OAuth pending)
+- [x] Reddit API testing (403 confirmed; Responsible Builder Policy identified)
+- [x] Reddit developer API request submitted
 - [ ] Final review & email to John
