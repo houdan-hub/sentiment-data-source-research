@@ -8,12 +8,12 @@
 
 ### Reddit API Test
 **Date**: 2026-09-29
-**Status**: ⚠️ Partially Completed — Public endpoint blocked; OAuth registration pending
+**Status**: ⚠️ Blocked by platform policy — manual application submitted
 
 #### What Was Tested
 1. **Public JSON endpoint** (`https://www.reddit.com/r/{subreddit}/new.json`) — no authentication
 2. **Public search endpoint** (`https://www.reddit.com/search.json`) — no authentication
-3. **App registration** at https://www.reddit.com/prefs/apps
+3. **Self-service app registration** at https://www.reddit.com/prefs/apps
 
 #### Test Code (Public Endpoint)
 ```python
@@ -30,14 +30,18 @@ print(f"Status: {response.status_code}")
 #### Results
 - **Public endpoint status**: `403 Forbidden` (0.23s response)
 - **Search endpoint status**: `403 Forbidden` (0.20s response)
-- **Key finding**: Reddit now blocks all unauthenticated API access. The old `.json` endpoint trick no longer works. **OAuth authentication is mandatory.**
+- **Self-service app creation**: reCAPTCHA silently resets on submit
 
-#### Issues Encountered
-1. **reCAPTCHA dead loop during app registration**: The reCAPTCHA verification repeatedly reset when clicking "create app", preventing successful OAuth app creation. This appears to be a Reddit-side issue with the registration flow.
-2. **403 on public endpoints**: Confirmed that unauthenticated access is fully blocked as of 2026.
+#### Root Cause Identified
+Reddit's **Responsible Builder Policy** (2026 update) has disabled self-service script app creation for new accounts. This is not a browser or IP issue — it is a deliberate platform policy change. New developers must now submit a manual ticket for API access:
+- Developer (non-commercial): https://support.reddithelp.com/hc/en-us/requests/new?ticket_form_id=14868593862164&tf_42139884615700=api_request_type_developer_clone
+- Approval is not guaranteed; turnaround time is unknown (days to weeks)
 
-#### Conclusion
-Reddit API requires OAuth 2.0 authentication via a registered app. The free tier (100 req/min) is available for non-commercial use, but app registration must be completed (reCAPTCHA issue needs to be resolved, possibly by trying a different browser or time).
+#### Current Status
+- Developer API request ticket has been submitted
+- Waiting for Reddit platform review
+- Full authenticated API testing is blocked until approval
+- Unauthenticated public endpoints return 403
 
 ---
 
@@ -74,46 +78,16 @@ resp_2 = requests.get(url, params=params_2, timeout=30)
 **ArtList Mode**:
 - Status: `429 Too Many Requests` (9.61s response)
 - Error: "Please limit requests to one every 5 seconds"
-- Note: Rate limit triggered due to prior test requests; IP temporarily throttled
 
 **ToneChart Mode**:
 - Status: `200 OK` (24.86s response)
-- Returns: `tonechart` array with sentiment bins
-- Each bin contains: `bin` (tone score, negative = negative sentiment), `count` (number of articles), `toparts` (top articles in that bin)
-
-#### Sample Response (ToneChart)
-```json
-{
-  "tonechart": [
-    {
-      "bin": -18,
-      "count": 1,
-      "toparts": [
-        {
-          "url": "https://informer.rs/...",
-          "title": "Saobracajna nesreca u Apatinu - Informer.rs"
-        }
-      ]
-    },
-    {
-      "bin": -17,
-      "count": 1,
-      "toparts": [...]
-    }
-  ]
-}
-```
+- Returns: `tonechart` array with sentiment bins (bin score, count, top articles)
 
 #### Key Findings
-1. **Strict rate limit**: GDELT Doc API enforces 1 request per 5 seconds. High-volume users should use the BigQuery or ngrams dataset instead.
-2. **Built-in sentiment**: ToneChart mode returns pre-computed sentiment bins, eliminating the need for a separate NLP model for news sentiment.
-3. **Slow response**: ~25s per request due to rate limiting and server processing time. Not suitable for real-time applications.
-4. **No API key required**: Completely free and open access.
-
-#### Fields Available (ToneChart)
-- `bin`: Tone/sentiment score (negative to positive scale)
-- `count`: Number of articles in this sentiment bin
-- `toparts`: Top articles with `url` and `title`
+1. **Strict rate limit**: 1 request per 5 seconds
+2. **Built-in sentiment**: ToneChart returns pre-computed sentiment bins
+3. **Slow response**: ~25s per request; not suitable for real-time
+4. **No API key required**: Completely free
 
 ---
 
@@ -121,16 +95,14 @@ resp_2 = requests.get(url, params=params_2, timeout=30)
 **Date**: Not tested
 **Status**: ⬜ Not started — deferred to Phase 2
 
-**Reason**: Amazon review data is planned for Phase 2 after the PoC validates the pipeline architecture. Third-party APIs (Canopy, ScrapeHero) require paid subscription or free trial signup, which is not necessary at this research stage.
-
 ---
 
 ## Summary Table
 
 | API | Test Date | Status | Response Time | Key Finding |
 |-----|-----------|--------|---------------|-------------|
-| Reddit (public) | 2026-09-29 | ❌ 403 | 0.2s | Unauthenticated access fully blocked; OAuth required |
-| Reddit (OAuth) | 2026-09-29 | ⚠️ Pending | N/A | reCAPTCHA registration issue |
+| Reddit (public) | 2026-09-29 | ❌ 403 | 0.2s | Unauthenticated access fully blocked |
+| Reddit (OAuth) | 2026-09-29 | ⏳ Pending | N/A | Manual application submitted; awaiting review |
 | GDELT (ArtList) | 2026-09-29 | ⚠️ 429 | 9.6s | Rate limited (1 req/5s) |
 | GDELT (ToneChart) | 2026-09-29 | ✅ 200 | 24.9s | Built-in sentiment data, free, no key |
 | Amazon (3rd-party) | — | ⬜ Not tested | — | Deferred to Phase 2 |
