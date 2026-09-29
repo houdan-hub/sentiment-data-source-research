@@ -38,11 +38,27 @@ for post in subreddit.new(limit=10):
     print("---")
 ```
 
+## Testing Findings (2026-09-29)
+
+### Critical: Unauthenticated Access Now Blocked
+The old public `.json` endpoint trick (appending `.json` to any Reddit URL) **no longer works**. Testing confirmed:
+- `GET https://www.reddit.com/r/technology/new.json` → **403 Forbidden** (0.23s)
+- `GET https://www.reddit.com/search.json?q=...` → **403 Forbidden** (0.20s)
+
+**Conclusion**: OAuth 2.0 authentication via a registered app is now mandatory. There is no unauthenticated access path.
+
+### App Registration Issue
+During testing, the reCAPTCHA verification on the app registration page entered a dead loop — verification would reset each time "create app" was clicked. This appears to be a Reddit-side issue. Workarounds:
+- Try a different browser (Chrome → Edge/Firefox)
+- Use incognito/private mode
+- Disable ad blockers and VPN
+- Try again at a different time
+
 ## Evaluation
 
 | Dimension | Rating | Notes |
 |-----------|--------|-------|
-| **Accessibility** | ⭐⭐⭐⭐ | Free for non-commercial, well-documented, mature Python SDK |
+| **Accessibility** | ⭐⭐⭐ | Free for non-commercial, but OAuth registration required; reCAPTCHA issues reported |
 | **Scalability** | ⭐⭐⭐ | 100 req/min cap; enterprise tier needed for large-scale |
 | **Update Frequency** | ⭐⭐⭐⭐⭐ | Near real-time — new posts visible within seconds |
 | **Data Quality** | ⭐⭐⭐⭐ | Rich discussion content, but has noise, trolls, and spam |
@@ -59,6 +75,8 @@ for post in subreddit.new(limit=10):
 ## Cons
 - Free tier is non-commercial only (need enterprise for production)
 - 100 req/min rate limit
+- OAuth registration can be tricky (reCAPTCHA issues)
+- No unauthenticated access as of 2026
 - Data is noisy — requires filtering and relevance scoring
 - Not all posts are product/customer-sentiment related
 
@@ -66,3 +84,4 @@ for post in subreddit.new(limit=10):
 - [Reddit API Documentation](https://www.reddit.com/dev/api/)
 - [PRAW Python Library](https://praw.readthedocs.io/)
 - [Reddit API Rate Limits](https://support.reddithelp.com/hc/en-us/articles/16160319875092)
+- [Developer Platform & Accessing Reddit Data](https://support.reddithelp.com/hc/en-us/articles/14945211791892)
