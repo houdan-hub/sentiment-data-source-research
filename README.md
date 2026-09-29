@@ -48,12 +48,3 @@ See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the
 └── tests/
     └── api-test-results.md            # Actual API test code & results
 ```
-
-## Progress
-- [x] Repository setup & research framework
-- [x] Documentation for all 4 candidate data sources
-- [x] Evaluation matrix & recommendation
-- [x] GDELT API testing (ToneChart successful, rate limit documented)
-- [x] Reddit API testing (403 confirmed; Responsible Builder Policy identified)
-- [x] Reddit developer API request submitted
-- [ ] Final review & email to John
