@@ -4,35 +4,38 @@
 
 | Dimension | Amazon (3rd-party API) | Reddit (Official API) | G2/Capterra (Scraping) | GDELT 2.0 (News) |
 |-----------|------------------------|----------------------|------------------------|-------------------|
-| **Accessibility** | ⭐⭐⭐ Medium (paid API needed for text) | ⭐⭐⭐⭐ High (free non-commercial) | ⭐⭐ Low (no free API) | ⭐⭐⭐⭐⭐ Very High (free unlimited) |
-| **Scalability** | ⭐⭐⭐⭐ High (pay-per-call) | ⭐⭐⭐ Medium (100 req/min cap) | ⭐⭐⭐ Medium (pay-per-result) | ⭐⭐⭐⭐⭐ Very High (no limits) |
+| **Accessibility** | ⭐⭐⭐ Medium (paid API needed for text) | ⭐⭐ **Low** (manual application required; self-service disabled in 2026) | ⭐⭐ Low (no free API) | ⭐⭐⭐⭐⭐ Very High (free, no key, but 5s rate limit) |
+| **Scalability** | ⭐⭐⭐⭐ High (pay-per-call) | ⭐⭐⭐ Medium (100 req/min upon approval) | ⭐⭐⭐ Medium (pay-per-result) | ⭐⭐⭐ Low (1 req/5s via REST; BigQuery for scale) |
 | **Update Frequency** | ⭐⭐⭐⭐ Near real-time | ⭐⭐⭐⭐⭐ Real-time | ⭐⭐ Slow (days/weeks) | ⭐⭐⭐⭐⭐ 15-min updates |
 | **Data Quality** | ⭐⭐⭐⭐⭐ Excellent (structured) | ⭐⭐⭐⭐ Good (noisy but rich) | ⭐⭐⭐⭐⭐ Excellent (structured) | ⭐⭐⭐ Good (news text) |
 | **Sentiment Relevance** | ⭐⭐⭐⭐⭐ Direct customer feedback | ⭐⭐⭐⭐ Authentic discussions | ⭐⭐⭐⭐ Direct B2B feedback | ⭐⭐ Media/brand perspective |
-| **Long-term Maintainability** | ⭐⭐⭐ Medium (3rd-party dependency) | ⭐⭐⭐⭐ High (official API) | ⭐⭐ Low (scraping fragile) | ⭐⭐⭐⭐⭐ Very High (Google-backed) |
-| **Startup Cost** | $ Low-Medium | $0 Free | $$ Medium | $0 Free |
-| **Commercial Use** | ✅ Yes (paid) | ⚠️ Free = non-commercial only | ✅ Yes (paid) | ✅ Yes (free) |
+| **Long-term Maintainability** | ⭐⭐⭐ Medium (3rd-party dependency) | ⭐⭐⭐ **Medium-Low** (policy changes frequently; approval uncertain) | ⭐⭐ Low (scraping fragile) | ⭐⭐⭐⭐⭐ Very High (Google-backed) |
+| **Startup Cost** | $ Low-Medium | $0 Free (upon approval) | $$ Medium | $0 Free |
+| **Commercial Use** | ✅ Yes (paid) | ⚠️ Requires enterprise agreement | ✅ Yes (paid) | ✅ Yes (free) |
+| **Time to First Data** | Days (signup + trial) | **Weeks** (manual review) | Days (signup + scraping) | **Minutes** (works immediately) |
 
-## Overall Ranking
+## Key Risk: Reddit Onboarding Barrier
+As of 2026, Reddit no longer allows self-service creation of script-type developer apps. New accounts must submit a manual API request ticket and wait for review (days to weeks, no SLA, approval not guaranteed). This is a significant risk for the PoC timeline.
 
-1. **Reddit** — Best balance for PoC: free, real-time, well-documented, high sentiment relevance
-2. **Amazon (3rd-party)** — Highest sentiment relevance but requires paid API; great for Phase 2
-3. **GDELT 2.0** — Best free source for macro-level brand sentiment; supplementary source
-4. **G2/Capterra** — Excellent data quality but limited to B2B, low frequency, hard to access
+## Overall Ranking (adjusted for 2026 policy)
 
-## Recommendation
+1. **GDELT 2.0** — Immediately usable, free, no approval needed, built-in sentiment. Best for rapid PoC despite slow rate limits.
+2. **Amazon (3rd-party)** — Highest sentiment relevance; signup is straightforward (free trial available). Great Phase 1+ option.
+3. **Reddit** — Best data quality and relevance, but onboarding barrier is high. Submit application now; can use immediately once approved.
+4. **G2/Capterra** — Excellent data quality but limited to B2B, low frequency, scraping-dependent.
 
-### Phase 1 (PoC): Reddit
-- Free official API with mature Python SDK (PRAW)
-- Real-time data with high volume
-- Allows us to validate the full pipeline architecture (ingestion → cleaning → sentiment → storage → dashboard) at zero cost
+## Recommendation (Revised 2026-09-29)
 
-### Phase 2: Amazon Reviews (via Canopy or ScrapeHero API)
-- Add the highest-quality direct customer sentiment data
-- Pay-per-call model is manageable once pipeline is validated
-- Start with a few product categories, expand based on results
+### Immediate Start: GDELT 2.0 + Amazon Reviews
+- **GDELT** is ready to use right now — no signup, no approval, works immediately
+- **Amazon reviews** via Canopy API (free 100 req/month) can be set up in minutes
+- This lets us start the PoC immediately without waiting for Reddit approval
 
-### Supplementary: GDELT 2.0
-- Add macro-level brand/industry sentiment monitoring
-- Completely free, no maintenance burden
-- Provides context that customer reviews alone can't capture
+### Parallel Track: Reddit Application
+- Submit the Reddit developer API request ticket now
+- Once approved (days to weeks), add Reddit as the primary high-volume source
+- Reddit remains the long-term best source for authentic customer sentiment
+
+### Phase 2: Expand to Amazon at Scale
+- Move from free trial to paid Canopy/ScrapeHero API
+- Add more product categories and monitoring
