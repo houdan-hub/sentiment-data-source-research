@@ -27,51 +27,50 @@ Reddit rejected the API access request (ticket 18531647), citing non-compliance 
 
 ### Google Play Reviews Test
 **Date**: 2026-10-02
-**Status**: ✅ Completed — successful, excellent results
+**Status**: ✅ Completed — multi-app, pagination, and repeated collection all verified
 
 **Library**: google-play-scraper v1.2.7 (free, no API key)
 **Location**: Los Angeles, CA (local machine)
 
-#### Test Setup
+#### Test 1: Multi-App Feasibility
 - 4 apps across different categories: WhatsApp (Social), Spotify (Music), Candy Crush Saga (Game), Google Maps (Navigation)
-- Fetched 20 newest reviews per app, then tested pagination (page 2)
-- Language: English, Country: US
+- Fetched 10-20 newest reviews per app
 
-#### Results
+| App | Category | Reviews | Response Time |
+|-----|----------|---------|---------------|
+| WhatsApp | Social | 10 | 0.15s |
+| Spotify | Music | 10 | 0.16s |
+| Candy Crush | Game | 10 | 0.16s |
+| Google Maps | Navigation | 10 | 0.14s |
 
-| App | Category | Reviews | Response Time | Avg Score | Avg Content Length | Dev Replies |
-|-----|----------|---------|---------------|-----------|--------------------|-------------|
-| WhatsApp | Social | 20 | 0.18s | 4.45★ | ~100 chars | tested |
-| Spotify | Music | 20 | 0.16s | 3.65★ | ~100 chars | tested |
-| Candy Crush Saga | Game | 20 | 0.15s | 4.85★ | ~100 chars | tested |
-| Google Maps | Navigation | 20 | 0.17s | 3.40★ | 106 chars | 2/20 |
+#### Test 2: Pagination
+- Page 2 returned additional reviews in 0.27s
+- Continuation token works for fetching historical reviews
 
-**Pagination**: Page 2 returned 20 more reviews in 0.27s — pagination works smoothly.
+#### Test 3: Repeated Collection (polling)
+- Fetched WhatsApp reviews twice, 30 seconds apart
+- Both calls returned successfully, no rate limiting or errors
+- No new reviews in 30 seconds (expected — reviews don't arrive every second)
+- **Conclusion**: endpoint supports repeated polling; can be scheduled hourly to catch new reviews
 
-#### Sample Review (Google Maps)
-```json
-{
-  "reviewId": "24e1e07c-678c-475f-b788-aaec3365829c",
-  "userName": "Reena Kumari",
-  "score": 5,
-  "content": "Nice series",
-  "at": "2026-09-30 17:33:18",
-  "thumbsUpCount": 0,
-  "reviewCreatedVersion": "26.38.01.980791571",
-  "replyContent": null
-}
+#### Sample Real Reviews
+```
+WhatsApp:  Anna Phume, 1 star, "Good" (2026-10-01)
+Spotify:   Rupesh S, 4 stars, "good app, but ads that come when we dont use Premium is just simply irritating" (2026-10-01)
+Candy Crush: Rachael Wambui, 3 stars, "ive paid ksh 500 for 30 dollars only to get none. what's up??" (2026-10-01)
+Google Maps: Gerald Doherty, 3 stars, "just did not work in Norfolk plus Suffolk nothing but dropped out" (2026-10-01)
 ```
 
-#### Available Fields
-`reviewId`, `userName`, `userImage`, `content`, `score`, `thumbsUpCount`, `reviewCreatedVersion`, `at`, `replyContent`, `repliedAt`, `appVersion`
+#### Available Fields per Review
+reviewId, userName, userImage, content, score, thumbsUpCount, reviewCreatedVersion, at, replyContent, repliedAt, appVersion
 
 #### Key Findings
-1. **Extremely fast**: 0.15-0.18s per request (vs GDELT's 25s)
+1. **Extremely fast**: 0.14-0.18s per request (vs GDELT's 25s)
 2. **No API key, no registration, no quota** — completely free
-3. **Structured data**: star rating + review text + timestamp + app version + helpful votes
-4. **Real-time**: newest reviews available (test fetched reviews from 2026-09-30, 2 days prior)
-5. **Pagination works**: continuation token for fetching historical reviews
-6. **Developer replies** included — useful for context
+3. **Structured data**: star rating + review text + timestamp + app version
+4. **Real-time**: reviews from 2026-10-01 fetched on 2026-10-02
+5. **Pagination works** for historical backfill
+6. **Repeated polling works** — can schedule hourly collection
 7. **Direct customer feedback** — highly relevant for sentiment analysis
 
 ---
@@ -88,5 +87,5 @@ Reddit rejected the API access request (ticket 18531647), citing non-compliance 
 |-----|------|--------|---------------|-------------|
 | Reddit | 2026-09-29 | ❌ Denied | N/A | Application rejected; unavailable |
 | GDELT | 2026-09-29 | ✅ Works | ~25s | Free but slow; news not customer feedback |
-| Google Play | 2026-10-02 | ✅ Works | 0.15-0.18s | Fast, free, structured customer reviews — best fit |
+| Google Play | 2026-10-02 | ✅ Works | 0.14-0.18s | Fast, free, structured; pagination + polling verified |
 | Amazon (Canopy) | — | ⚠️ Limited | — | 100 req/month free tier insufficient |
