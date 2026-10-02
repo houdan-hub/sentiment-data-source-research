@@ -1,6 +1,6 @@
 # API Test Results
 
-> Tested on 2026-09-29 using Python requests library. All tests run from local machine in Los Angeles, CA.
+> Tested on 2026-09-29 and 2026-10-02.
 
 ## Test Log
 
@@ -8,107 +8,70 @@
 
 ### Reddit API Test
 **Date**: 2026-09-29
-**Status**: ⚠️ Blocked by platform policy — manual application submitted
+**Status**: ❌ Denied — application rejected by Reddit
 
 #### What Was Tested
-1. **Public JSON endpoint** (`https://www.reddit.com/r/{subreddit}/new.json`) — no authentication
-2. **Public search endpoint** (`https://www.reddit.com/search.json`) — no authentication
-3. **Self-service app registration** at https://www.reddit.com/prefs/apps
+1. Public JSON endpoint (no auth) → 403 Forbidden
+2. Self-service app registration at /prefs/apps → reCAPTCHA dead loop
+3. Manual developer API request ticket → **Rejected** by Reddit Data Team
 
-#### Test Code (Public Endpoint)
-```python
-import requests
-
-headers = {"User-Agent": "sentiment-research/1.0 (educational use)"}
-url = "https://www.reddit.com/r/technology/new.json"
-params = {"limit": 5}
-
-response = requests.get(url, headers=headers, params=params, timeout=30)
-print(f"Status: {response.status_code}")
-```
-
-#### Results
-- **Public endpoint status**: `403 Forbidden` (0.23s response)
-- **Search endpoint status**: `403 Forbidden` (0.20s response)
-- **Self-service app creation**: reCAPTCHA silently resets on submit
-
-#### Root Cause Identified
-Reddit's **Responsible Builder Policy** (2026 update) has disabled self-service script app creation for new accounts. This is not a browser or IP issue — it is a deliberate platform policy change. New developers must now submit a manual ticket for API access:
-- Developer (non-commercial): https://support.reddithelp.com/hc/en-us/requests/new?ticket_form_id=14868593862164&tf_42139884615700=api_request_type_developer_clone
-- Approval is not guaranteed; turnaround time is unknown (days to weeks)
-
-#### Current Status
-- Developer API request ticket has been submitted
-- Waiting for Reddit platform review
-- Full authenticated API testing is blocked until approval
-- Unauthenticated public endpoints return 403
+#### Result
+Reddit rejected the API access request, citing non-compliance with the Responsible Builder Policy. Reddit is treated as **unavailable for this project** per John's guidance.
 
 ---
 
 ### GDELT API Test
 **Date**: 2026-09-29
-**Status**: ✅ Completed — ToneChart mode successful; ArtList rate-limited
-
-#### What Was Tested
-1. **ArtList mode** — fetch article list for keyword "Tesla"
-2. **ToneChart mode** — fetch sentiment/tone distribution for keyword "Tesla"
-
-#### Test Code
-```python
-import requests
-import time
-
-# GDELT requires min 5 seconds between requests
-time.sleep(6)
-
-url = "https://api.gdeltproject.org/api/v2/doc/doc"
-
-# Test 1: ArtList mode
-params_1 = {"query": "Tesla", "mode": "ArtList", "maxrecords": 5, "format": "json"}
-resp_1 = requests.get(url, params=params_1, timeout=30)
-
-# Test 2: ToneChart mode (with 6s delay before)
-time.sleep(6)
-params_2 = {"query": "Tesla", "mode": "ToneChart", "maxrecords": 5, "format": "json"}
-resp_2 = requests.get(url, params=params_2, timeout=30)
-```
+**Status**: ✅ Completed
 
 #### Results
-
-**ArtList Mode**:
-- Status: `429 Too Many Requests` (9.61s response)
-- Error: "Please limit requests to one every 5 seconds"
-
-**ToneChart Mode**:
-- Status: `200 OK` (24.86s response)
-- Returns: `tonechart` array with sentiment bins (bin score, count, top articles)
-
-#### Key Findings
-1. **Strict rate limit**: 1 request per 5 seconds
-2. **Built-in sentiment**: ToneChart returns pre-computed sentiment bins
-3. **Slow response**: ~25s per request; not suitable for real-time
-4. **No API key required**: Completely free
+- ArtList mode: 429 rate limited (1 req/5s)
+- ToneChart mode: 200 OK, returns built-in sentiment bins, ~25s response
+- No API key needed, completely free
 
 ---
 
-### Amazon Third-party API Test (Optional)
+### Google Play Reviews Test
+**Date**: 2026-10-02
+**Status**: 🔄 Test script ready — pending local execution
+
+#### What Was Tested
+- Library: `google-play-scraper` (v1.2.7, installed successfully)
+- Test script: [`tests/test_gplay_reviews.py`](test_gplay_reviews.py)
+- Cloud environment could not reach Google Play (network blocked), but the library is installed and documented
+- Test script fetches 20 newest reviews from 4 sample apps: WhatsApp, Spotify, Candy Crush, Google Maps
+
+#### Expected Data Fields
+| Field | Description |
+|-------|-------------|
+| reviewId | Unique review ID |
+| userName | Reviewer name |
+| content | Review text (sentiment data) |
+| score | Star rating 1-5 |
+| thumbsUpCount | Helpful votes |
+| at | Timestamp |
+| reviewCreatedVersion | App version |
+| replyContent | Developer response |
+
+#### To Run Locally
+```bash
+pip install google-play-scraper
+python test_gplay_reviews.py
+```
+
+---
+
+### Amazon Third-party API Test
 **Date**: Not tested
-**Status**: ⬜ Not started — deferred to Phase 2
+**Status**: ⬜ Not started — Canopy free tier (100 req/month) is too limited per John's feedback
 
 ---
 
 ## Summary Table
 
-| API | Test Date | Status | Response Time | Key Finding |
-|-----|-----------|--------|---------------|-------------|
-| Reddit (public) | 2026-09-29 | ❌ 403 | 0.2s | Unauthenticated access fully blocked |
-| Reddit (OAuth) | 2026-09-29 | ⏳ Pending | N/A | Manual application submitted; awaiting review |
-| GDELT (ArtList) | 2026-09-29 | ⚠️ 429 | 9.6s | Rate limited (1 req/5s) |
-| GDELT (ToneChart) | 2026-09-29 | ✅ 200 | 24.9s | Built-in sentiment data, free, no key |
-| Amazon (3rd-party) | — | ⬜ Not tested | — | Deferred to Phase 2 |
-
-## Test Environment
-- **Python**: 3.14.7
-- **Library**: requests 2.x
-- **Location**: Los Angeles, CA
-- **Date**: 2026-09-29
+| API | Date | Status | Key Finding |
+|-----|------|--------|-------------|
+| Reddit | 2026-09-29 | ❌ Denied | Application rejected; unavailable per policy |
+| GDELT | 2026-09-29 | ✅ Works | Free, built-in sentiment, but 5s rate limit, news not customer feedback |
+| Google Play | 2026-10-02 | 🔄 Script ready | Free, no API key, structured customer reviews; pending local run |
+| Amazon (Canopy) | — | ⚠️ Limited | 100 req/month free tier insufficient |
