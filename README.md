@@ -34,10 +34,6 @@ See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the
     ├── api-test-results.md
     └── test_gplay_reviews.py
 ```
-
-## Progress
-- [x] Research on all candidate data sources
-- [x] GDELT API tested and documented
 - [x] Reddit application attempted and rejected
 - [x] Google Play reviews evaluation and test script prepared
 - [ ] Run Google Play test locally, document results
