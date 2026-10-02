@@ -1,0 +1,78 @@
+{
+  "WhatsApp": {
+    "category": "Social",
+    "reviews_fetched": 20,
+    "response_time": 0.18,
+    "avg_score": 4.45,
+    "avg_content_length": 21.0,
+    "sample": {
+      "reviewId": "16329ee4-80b9-432f-af15-2d0a536ab848",
+      "userName": "Melody Mwadziwanaa",
+      "score": 5,
+      "content": "excellent",
+      "at": "2026-09-30 17:35:14",
+      "thumbsUpCount": 0,
+      "reviewCreatedVersion": "2.26.38.73",
+      "replyContent": null
+    },
+    "page2_count": 20,
+    "page2_time": 0.7
+  },
+  "Spotify": {
+    "category": "Music",
+    "reviews_fetched": 20,
+    "response_time": 0.16,
+    "avg_score": 3.65,
+    "avg_content_length": 80.0,
+    "sample": {
+      "reviewId": "1737165b-375e-415f-864c-dc2940486586",
+      "userName": "Ndukauba Fortress",
+      "score": 4,
+      "content": "I love Spotify but the only problem is I can't download my music.",
+      "at": "2026-09-30 17:39:07",
+      "thumbsUpCount": 0,
+      "reviewCreatedVersion": null,
+      "replyContent": null
+    },
+    "page2_count": 20,
+    "page2_time": 0.29
+  },
+  "Candy Crush Saga": {
+    "category": "Game",
+    "reviews_fetched": 20,
+    "response_time": 0.15,
+    "avg_score": 4.85,
+    "avg_content_length": 28.0,
+    "sample": {
+      "reviewId": "7b09d672-9029-423e-80cf-e601d221696d",
+      "userName": "Muhammad Ishaq",
+      "score": 5,
+      "content": "Ali Usman vwg is ho",
+      "at": "2026-09-30 17:39:40",
+      "thumbsUpCount": 0,
+      "reviewCreatedVersion": null,
+      "replyContent": null
+    },
+    "page2_count": 20,
+    "page2_time": 0.31
+  },
+  "Google Maps": {
+    "category": "Navigation",
+    "reviews_fetched": 20,
+    "response_time": 0.17,
+    "avg_score": 3.4,
+    "avg_content_length": 106.0,
+    "sample": {
+      "reviewId": "24e1e07c-678c-475f-b788-aaec3365829c",
+      "userName": "Reena Kumari",
+      "score": 5,
+      "content": "Nice series",
+      "at": "2026-09-30 17:33:18",
+      "thumbsUpCount": 0,
+      "reviewCreatedVersion": "26.38.01.980791571",
+      "replyContent": null
+    },
+    "page2_count": 20,
+    "page2_time": 0.27
+  }
+}
