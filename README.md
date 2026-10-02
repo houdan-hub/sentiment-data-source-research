@@ -43,4 +43,3 @@ See [`comparison/evaluation-matrix.md`](comparison/evaluation-matrix.md) for the
 - [x] Google Play reviews feasibility test completed (multi-app, pagination, repeated collection)
 - [x] All test results and evidence documented in this repo
 - [x] Recommendation finalized
-- [ ] Awaiting John's feedback on next step
